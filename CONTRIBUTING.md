@@ -28,7 +28,6 @@ O nome do time deve ser **lowercase, sem espacos e sem acentos** (use hifens se 
 ```
 participants/turbo-coders/    # bom
 participants/Turbo Coders/    # ruim
-participants/turbo_coders/    # evitar
 ```
 
 ### 4. Preencha o info.json
@@ -49,9 +48,9 @@ Edite `participants/<seu-time>/info.json` com os dados reais:
 
 O unico lugar onde voce precisa mexer e dentro de `participants/<seu-time>/`. Foque no:
 
-- `backend/src/routes/transactions.js` — toda a logica de negocio
-- `backend/prisma/schema.prisma` — se precisar adicionar campos ou indices
-- `frontend/src/` — componentes e paginas do React
+- `backend/src/routes/transactions.js` - toda a logica de negocio
+- `backend/prisma/schema.prisma` - se precisar adicionar campos ou indices
+- `frontend/src/` - componentes e paginas do React
 
 ### 6. Teste localmente
 
@@ -107,7 +106,6 @@ Se der conflito, resolva **sem alterar nada fora da sua pasta**.
 ### Git
 
 - Faca commits pequenos e frequentes com mensagens claras
-- Use branches para features (`feature/criar-transacao`, `fix/calculo-juros`)
 - Revise o `git diff` antes de cada commit
 - Nao commite `node_modules/`, `data.db` ou `package-lock.json` do workspace raiz
 
@@ -118,13 +116,6 @@ Se der conflito, resolva **sem alterar nada fora da sua pasta**.
 - Pense em concorrencia — os testes de stress vao testar isso
 - Nao deixe `console.log` de debug no codigo final
 - Mantenha o codigo organizado e legivel
-
-### Performance
-
-- SQLite trava em escritas concorrentes — pesquise como lidar com isso
-- Use transacoes do banco quando precisar de atomicidade
-- Indices no banco fazem diferenca nos testes de stress
-- O benchmark roda 200 transacoes concorrentes com 20 workers
 
 ### Frontend
 
