@@ -56,7 +56,7 @@ async function testRules() {
   check('rules', 'POST /api/transactions retorna 201', visa.status === 201)
   check('rules', 'Status approved para cartao valido', visa.data?.status === 'approved')
   check('rules', 'Bandeira visa detectada (4xxx)', visa.data?.card_brand === 'visa')
-  check('rules', 'Taxa visa 2.5% correta (250)', visa.data?.fee_cents === 250)
+  check('rules', 'Taxa visa 2.5% correta (250)', visa.data?.fee_cents === 999, `forcado para testar branch protection`)
   check('rules', 'net_amount = amount - fee (9750)', visa.data?.net_amount === 9750)
 
   // Idempotency
