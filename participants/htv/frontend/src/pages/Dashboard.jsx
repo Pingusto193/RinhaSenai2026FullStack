@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-
+import './styles/dashboard.css'
 
 export default function Dashboard() {
 
@@ -105,12 +105,23 @@ export default function Dashboard() {
         className = "input-card-number"
         value = {cardNumber}
         onChange ={e => setCardNumber(e.target.value)}
+        placeholder="0000 0000 0000 0000"
         />
         </div>
+
+        <div>
+          <label>Nome do titular:</label>
+          <input
+          className="input-holder-name"
+          value={holderName}
+          onChage={e => setHolderName(e.target.value)}
+          placeholder = "João Silva"
+        />
+        </div>
+
         <div>
 
-
-          <label>Valide (MM/AA)</label>
+          <label>Validade (MM/AA)</label>
           <input
           className = "input-expiration"
           value = {expiration}
@@ -125,6 +136,17 @@ export default function Dashboard() {
           value ={cvv}
           onChange={e => setCvv(e.target.value)}
           placeholder="123"
+          />
+        </div>
+
+        <div>
+          <label>Valor (centavos):</label>
+          <input
+          className="input-amount"
+          type="number"
+          value={amount}
+          onChange={e => setAmount(e.target.value)}
+          placeholder="15000"
           />
         </div>
         <div>
@@ -159,10 +181,25 @@ export default function Dashboard() {
           <div>
             <p>
               Saldo líquido:{ '' }
-              <span className="display-total-approved" data-value={balance.total_approved}>
-                {balance.total_approved}
+              <span className="display-total-approved" data-value={balance.balance_cents}>
+                R$ {(balance.balance_cents / 100).toFixed(2)}
               </span>
             </p>
+
+            <p>
+              Total aprovadas: { ' '}
+              <span className="display-total-approved" data-value={balance.total_approved}>
+              {balance.total_approved}
+              </span>
+            </p>
+
+            <p>
+              Total recusadas: {' '}
+              <span className="display-total-declined" data-value={balance.total_declined}>
+                {balance.total_declined}
+              </span>
+            </p>
+
 
             <p>
               Total estornadas: { ' ' }
