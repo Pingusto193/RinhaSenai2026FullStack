@@ -145,7 +145,7 @@ export default function Dashboard() {
         </div>
 
         <div>
-          <label>Valor (centavos):</label>
+          <label>Valor (em centavos — ex: R$150,00 = 15000):</label>
           <input
           className="input-amount"
           type="number"
