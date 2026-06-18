@@ -34,60 +34,68 @@ export default function History() {
     <div>
       <h1>Historico de Transacoes</h1>
 
-      <div className="list-transactions">
-        {items.map((t) => (
-          <div className="transaction-item" key={t.id}>
-            <span className="transaction-id" data-value={t.id}>{t.id}</span>
-            <span className="transaction-status" data-value={t.status}>{t.status}</span>
-            <span className="transaction-amount" data-value={t.amount_cents}>{formatCents(t.amount_cents)}</span>
-            <span className="transaction-brand" data-value={t.card_brand}>{t.card_brand}</span>
-            <span className="transaction-installments" data-value={t.installments}>{t.installments}</span>
-            <span className="transaction-installment-amount" data-value={t.installment_amount}>
-              {formatCents(t.installment_amount)}
-            </span>
-            <span className="transaction-total" data-value={t.total_with_interest}>
-              {formatCents(t.total_with_interest)}
-            </span>
-            <span className="transaction-fee" data-value={t.fee_cents}>{formatCents(t.fee_cents)}</span>
-            <span className="transaction-description" data-value={t.description}>{t.description}</span>
-            <span className="transaction-card" data-value={t.card_last4}>{t.card_last4}</span>
-            <span className="transaction-date" data-value={t.created_at}>
-              {new Date(t.created_at).toLocaleString('pt-BR')}
-            </span>
-            <Link to={`/transaction/${t.id}`}>Detalhe</Link>
-            {t.status === 'approved' && (
-              <button type="button" className="btn-refund" onClick={() => handleRefund(t.id)}>
-                Estornar
-              </button>
-            )}
+      <section className="card">
+        {items.length === 0 ? (
+          <p>Nenhuma transacao ainda.</p>
+        ) : (
+          <div className="list-transactions">
+            {items.map((t) => (
+              <div className="transaction-item" key={t.id}>
+                <span className="transaction-id" data-value={t.id} title={t.id}>{t.id.slice(0, 8)}…</span>
+                <span className="transaction-status" data-value={t.status}>{t.status}</span>
+                <span className="transaction-amount" data-value={t.amount_cents}>{formatCents(t.amount_cents)}</span>
+                <span className="transaction-brand" data-value={t.card_brand}>{t.card_brand}</span>
+                <span className="transaction-installments" data-value={t.installments}>{t.installments}x</span>
+                <span className="transaction-installment-amount" data-value={t.installment_amount}>
+                  {formatCents(t.installment_amount)}
+                </span>
+                <span className="transaction-total" data-value={t.total_with_interest}>
+                  {formatCents(t.total_with_interest)}
+                </span>
+                <span className="transaction-fee" data-value={t.fee_cents}>{formatCents(t.fee_cents)}</span>
+                <span className="transaction-description" data-value={t.description}>{t.description}</span>
+                <span className="transaction-card" data-value={t.card_last4}>•••• {t.card_last4}</span>
+                <span className="transaction-date" data-value={t.created_at}>
+                  {new Date(t.created_at).toLocaleString('pt-BR')}
+                </span>
+                <Link to={`/transaction/${t.id}`}>Detalhe</Link>
+                {t.status === 'approved' && (
+                  <button type="button" className="btn-refund" onClick={() => handleRefund(t.id)}>
+                    Estornar
+                  </button>
+                )}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        )}
 
-      <div className="pagination">
-        <span className="pagination-current" data-value={pagination.page}>{pagination.page}</span>
-        {' / '}
-        <span className="pagination-pages" data-value={pagination.total_pages}>{pagination.total_pages}</span>
-        {' ('}
-        <span className="pagination-total" data-value={pagination.total}>{pagination.total}</span>
-        {' total)'}
-        <button
-          type="button"
-          className="btn-prev-page"
-          disabled={pagination.page <= 1}
-          onClick={() => goToPage(pagination.page - 1)}
-        >
-          Anterior
-        </button>
-        <button
-          type="button"
-          className="btn-next-page"
-          disabled={pagination.page >= pagination.total_pages}
-          onClick={() => goToPage(pagination.page + 1)}
-        >
-          Proximo
-        </button>
-      </div>
+        <div className="pagination">
+          <span>
+            Pagina <span className="pagination-current" data-value={pagination.page}>{pagination.page}</span>
+            {' de '}
+            <span className="pagination-pages" data-value={pagination.total_pages}>{pagination.total_pages}</span>
+            {' ('}
+            <span className="pagination-total" data-value={pagination.total}>{pagination.total}</span>
+            {' no total)'}
+          </span>
+          <button
+            type="button"
+            className="btn-prev-page"
+            disabled={pagination.page <= 1}
+            onClick={() => goToPage(pagination.page - 1)}
+          >
+            Anterior
+          </button>
+          <button
+            type="button"
+            className="btn-next-page"
+            disabled={pagination.page >= pagination.total_pages}
+            onClick={() => goToPage(pagination.page + 1)}
+          >
+            Proximo
+          </button>
+        </div>
+      </section>
     </div>
   )
 }

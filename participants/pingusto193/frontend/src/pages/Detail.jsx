@@ -2,6 +2,15 @@ import { useState, useEffect, useCallback } from 'react'
 import { useParams, Link } from 'react-router'
 import { getTransaction, refundTransaction, formatCents } from '../api.js'
 
+function Field({ label, className, value, children }) {
+  return (
+    <div className="detail-field">
+      <span className="label">{label}</span>
+      <span className={className} data-value={value}>{children}</span>
+    </div>
+  )
+}
+
 export default function Detail() {
   const { id } = useParams()
   const [transaction, setTransaction] = useState(null)
@@ -29,55 +38,53 @@ export default function Detail() {
   return (
     <div>
       <h1>Detalhe da Transacao</h1>
-      <Link to="/history">&larr; Voltar</Link>
+      <p><Link to="/history">&larr; Voltar para o historico</Link></p>
 
-      <p>ID: <span className="detail-id" data-value={transaction.id}>{transaction.id}</span></p>
-      <p>Status: <span className="detail-status" data-value={transaction.status}>{transaction.status}</span></p>
-      <p>
-        Valor: <span className="detail-amount" data-value={transaction.amount_cents}>
-          {formatCents(transaction.amount_cents)}
-        </span>
-      </p>
-      <p>Bandeira: <span className="detail-brand" data-value={transaction.card_brand}>{transaction.card_brand}</span></p>
-      <p>Titular: <span className="detail-holder" data-value={transaction.holder_name}>{transaction.holder_name}</span></p>
-      <p>Cartao: <span className="detail-card" data-value={transaction.card_last4}>{transaction.card_last4}</span></p>
-      <p>
-        Parcelas: <span className="detail-installments" data-value={transaction.installments}>
-          {transaction.installments}
-        </span>
-      </p>
-      <p>
-        Valor da parcela: <span className="detail-installment-amount" data-value={transaction.installment_amount}>
-          {formatCents(transaction.installment_amount)}
-        </span>
-      </p>
-      <p>
-        Total com juros: <span className="detail-total" data-value={transaction.total_with_interest}>
-          {formatCents(transaction.total_with_interest)}
-        </span>
-      </p>
-      <p>Taxa: <span className="detail-fee" data-value={transaction.fee_cents}>{formatCents(transaction.fee_cents)}</span></p>
-      <p>
-        Valor liquido: <span className="detail-net" data-value={transaction.net_amount}>
-          {formatCents(transaction.net_amount)}
-        </span>
-      </p>
-      <p>
-        Descricao: <span className="detail-description" data-value={transaction.description}>
-          {transaction.description}
-        </span>
-      </p>
-      <p>
-        Data: <span className="detail-date" data-value={transaction.created_at}>
-          {new Date(transaction.created_at).toLocaleString('pt-BR')}
-        </span>
-      </p>
+      <section className="card">
+        <div className="detail-grid">
+          <Field label="ID" className="detail-id" value={transaction.id}>{transaction.id}</Field>
+          <Field label="Status" className="detail-status" value={transaction.status}>{transaction.status}</Field>
+          <Field label="Valor" className="detail-amount" value={transaction.amount_cents}>
+            {formatCents(transaction.amount_cents)}
+          </Field>
+          <Field label="Bandeira" className="detail-brand" value={transaction.card_brand}>
+            {transaction.card_brand}
+          </Field>
+          <Field label="Titular" className="detail-holder" value={transaction.holder_name}>
+            {transaction.holder_name}
+          </Field>
+          <Field label="Cartao" className="detail-card" value={transaction.card_last4}>
+            •••• {transaction.card_last4}
+          </Field>
+          <Field label="Parcelas" className="detail-installments" value={transaction.installments}>
+            {transaction.installments}x
+          </Field>
+          <Field label="Valor da parcela" className="detail-installment-amount" value={transaction.installment_amount}>
+            {formatCents(transaction.installment_amount)}
+          </Field>
+          <Field label="Total com juros" className="detail-total" value={transaction.total_with_interest}>
+            {formatCents(transaction.total_with_interest)}
+          </Field>
+          <Field label="Taxa" className="detail-fee" value={transaction.fee_cents}>
+            {formatCents(transaction.fee_cents)}
+          </Field>
+          <Field label="Valor liquido" className="detail-net" value={transaction.net_amount}>
+            {formatCents(transaction.net_amount)}
+          </Field>
+          <Field label="Descricao" className="detail-description" value={transaction.description}>
+            {transaction.description}
+          </Field>
+          <Field label="Data" className="detail-date" value={transaction.created_at}>
+            {new Date(transaction.created_at).toLocaleString('pt-BR')}
+          </Field>
+        </div>
 
-      {transaction.status === 'approved' && (
-        <button type="button" className="btn-refund" onClick={handleRefund}>
-          Estornar
-        </button>
-      )}
+        {transaction.status === 'approved' && (
+          <button type="button" className="btn-refund" style={{ marginTop: '1rem' }} onClick={handleRefund}>
+            Estornar
+          </button>
+        )}
+      </section>
     </div>
   )
 }
