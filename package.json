@@ -1,9 +1,14 @@
 {
-  "name": "nova-pasta-(2)",
+  "name": "foguinho-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:setup": "npm run db:generate && npm run db:push",
+    "dev": "nodemon server.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,9 +20,13 @@
     "prisma": "^7.8.0"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.8.0",
+    "@libsql/client": "^0.17.0",
+    "@prisma/adapter-libsql": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
     "express": "^5.2.1",
-    "pg": "^8.21.0"
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.2.0"
   }
 }

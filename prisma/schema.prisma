@@ -1,21 +1,116 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
 
-model Acao {
-  id     Int     @id @default(autoincrement())
-  nome   String
-  codigo String
-  valor  Float
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  name         String
+  bio          String?
+  phone        String?
+  avatarPath   String?  @map("avatar_path")
+  personalCode String   @unique @map("personal_code")
+  balanceCents Int      @default(0) @map("balance_cents")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  investment          Investment?
+  investmentMovements InvestmentMovement[]
+  snapshots           InvestmentSnapshot[]
+  streak              Streak?
+
+  sentTransfers     Transfer[] @relation("SentTransfers")
+  receivedTransfers Transfer[] @relation("ReceivedTransfers")
+
+  friendshipsA Friendship[] @relation("FriendshipUserA")
+  friendshipsB Friendship[] @relation("FriendshipUserB")
+
+  @@map("users")
 }
 
+model Transfer {
+  id                    String   @id @default(uuid())
+  senderId              String   @map("sender_id")
+  receiverId            String   @map("receiver_id")
+  amountCents           Int      @map("amount_cents")
+  receiverCodeSnapshot  String   @map("receiver_code_snapshot")
+  createdAt             DateTime @default(now()) @map("created_at")
+
+  sender   User @relation("SentTransfers", fields: [senderId], references: [id])
+  receiver User @relation("ReceivedTransfers", fields: [receiverId], references: [id])
+
+  @@index([senderId, createdAt])
+  @@index([receiverId, createdAt])
+  @@map("transfers")
+}
+
+model Investment {
+  id             String   @id @default(uuid())
+  userId         String   @unique @map("user_id")
+  type           String   @default("FIXED") @map("type")
+  principalCents Int      @default(0) @map("principal_cents")
+  lastAccrualAt  DateTime @default(now()) @map("last_accrual_at")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("investments")
+}
+
+model InvestmentMovement {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  type        String   @map("type")
+  amountCents Int      @map("amount_cents")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@map("investment_movements")
+}
+
+model InvestmentSnapshot {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  valueCents Int      @map("value_cents")
+  dayKey     String   @map("day_key")
+  capturedAt DateTime @default(now()) @map("captured_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, dayKey])
+  @@index([userId, capturedAt])
+  @@map("investment_snapshots")
+}
+
+model Streak {
+  id            String    @id @default(uuid())
+  userId        String    @unique @map("user_id")
+  current       Int       @default(0)
+  record        Int       @default(0)
+  lastCountedAt String?   @map("last_counted_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("streaks")
+}
+
+model Friendship {
+  id        String   @id @default(uuid())
+  userAId   String   @map("user_a_id")
+  userBId   String   @map("user_b_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  userA User @relation("FriendshipUserA", fields: [userAId], references: [id])
+  userB User @relation("FriendshipUserB", fields: [userBId], references: [id])
+
+  @@unique([userAId, userBId])
+  @@map("friendships")
+}
