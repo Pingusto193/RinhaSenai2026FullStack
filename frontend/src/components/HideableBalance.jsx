@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import EyeIcon from './EyeIcon.jsx'
 
 export function formatCents(cents) {
   return (cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -17,7 +18,7 @@ export default function HideableBalance({ valueCents, className = 'balance-value
         aria-label={hidden ? 'Mostrar valor' : 'Ocultar valor'}
         title={hidden ? 'Mostrar valor' : 'Ocultar valor'}
       >
-        {hidden ? '🙈' : '👁️'}
+        <EyeIcon hidden={hidden} />
       </button>
     </span>
   )

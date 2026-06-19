@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router'
 import { getLedger } from '../api/dashboard.js'
 import { formatCents } from '../components/HideableBalance.jsx'
+import DirectionIcon from '../components/DirectionIcon.jsx'
 
 const LEDGER_LABEL = {
   transfer_sent: 'Transferencia enviada',
@@ -38,11 +39,13 @@ export default function Ledger() {
           <div className="list">
             {data.items.map((entry, i) => (
               <div className="list-item" key={i}>
-                <span>
-                  {LEDGER_LABEL[entry.type]}
-                  {entry.counterparty ? ` - ${entry.counterparty}` : ''}
-                  {' - '}
-                  {new Date(entry.createdAt).toLocaleString('pt-BR')}
+                <span className="list-item-main">
+                  <DirectionIcon outgoing={isOutgoing(entry.type)} />
+                  <span className="list-item-text">
+                    {LEDGER_LABEL[entry.type]}
+                    {entry.counterparty ? ` - ${entry.counterparty}` : ''}
+                    <small>{new Date(entry.createdAt).toLocaleString('pt-BR')}</small>
+                  </span>
                 </span>
                 <span className={isOutgoing(entry.type) ? 'amount-negative' : 'amount-positive'}>
                   {isOutgoing(entry.type) ? '-' : '+'}{formatCents(entry.amountCents)}

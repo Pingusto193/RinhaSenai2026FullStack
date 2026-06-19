@@ -61,7 +61,13 @@ export default function Transfer() {
                   key={t.id}
                   onClick={() => setPersonalCode(t.receiverCodeSnapshot)}
                 >
-                  <span>{t.receiverName} - {new Date(t.createdAt).toLocaleTimeString('pt-BR')}</span>
+                  <span className="list-item-main">
+                    <span className="mini-avatar">{t.receiverName[0]?.toUpperCase()}</span>
+                    <span className="list-item-text">
+                      {t.receiverName}
+                      <small>{new Date(t.createdAt).toLocaleTimeString('pt-BR')}</small>
+                    </span>
+                  </span>
                   <span className="amount-negative">-{formatCents(t.amountCents)}</span>
                 </button>
               ))}
@@ -93,7 +99,7 @@ export default function Transfer() {
                 required
               />
             </label>
-            <button type="submit" className="btn" disabled={submitting}>
+            <button type="submit" className="btn-success" disabled={submitting}>
               {submitting ? 'Transferindo...' : 'Transferir'}
             </button>
           </form>

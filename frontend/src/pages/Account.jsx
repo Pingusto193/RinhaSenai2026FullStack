@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate, Link } from 'react-router'
 import {
   getAccount, updateAccount, uploadAvatar,
   changePassword, changeEmail, changePhone, regeneratePersonalCode,
 } from '../api/account.js'
+import { getFriends } from '../api/friends.js'
 import { useAuth } from '../context/AuthContext.jsx'
+import BrandMark from '../components/BrandMark.jsx'
 
 function Field({ label, children }) {
   return (
@@ -27,6 +29,7 @@ export default function Account() {
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [feedback, setFeedback] = useState(null)
+  const [friendsCount, setFriendsCount] = useState(null)
 
   function load() {
     return getAccount()
@@ -41,6 +44,7 @@ export default function Account() {
 
   useEffect(() => {
     load()
+    getFriends().then((list) => setFriendsCount(list.length)).catch(() => {})
   }, [])
 
   function showFeedback(type, message) {
@@ -124,7 +128,12 @@ export default function Account() {
 
   return (
     <div>
-      <h1>Conta</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h1>Conta</h1>
+        <Link to="/amigos" className="btn-secondary">
+          Amigos{friendsCount !== null ? `: ${friendsCount}` : ''}
+        </Link>
+      </div>
 
       <div className="grid-2">
         <section className="card">
@@ -154,7 +163,7 @@ export default function Account() {
 
         <section className="card action-list">
           <p className="streak-badge">
-            🔥 Atual: {account.streak.current} · Recorde: {account.streak.record}
+            <BrandMark size={16} /> Atual: {account.streak.current} · Recorde: {account.streak.record}
           </p>
 
           <h2 style={{ marginTop: '0.5rem' }}>Codigo pessoal</h2>

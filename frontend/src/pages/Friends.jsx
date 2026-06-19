@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getFriends, addFriend } from '../api/friends.js'
+import BrandMark from '../components/BrandMark.jsx'
 
 export default function Friends() {
   const [friends, setFriends] = useState([])
@@ -54,7 +55,7 @@ export default function Friends() {
         </section>
 
         <section className="card">
-          <h2>Seus amigos</h2>
+          <h2>Seus amigos · {friends.length}</h2>
           {friends.length === 0 ? (
             <p style={{ color: 'var(--text-muted)' }}>Nenhum amigo ainda.</p>
           ) : (
@@ -62,7 +63,7 @@ export default function Friends() {
               {friends.map((f) => (
                 <div className="list-item" key={f.id}>
                   <span>{f.name}</span>
-                  <span className="streak-badge">🔥 {f.streak.current}</span>
+                  <span className="streak-badge"><BrandMark size={16} /> {f.streak.current}</span>
                 </div>
               ))}
             </div>

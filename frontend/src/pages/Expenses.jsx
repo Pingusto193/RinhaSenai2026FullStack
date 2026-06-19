@@ -4,6 +4,7 @@ import { getRecentExpenses, getExpensesAggregate } from '../api/expenses.js'
 import PeriodFilter from '../components/PeriodFilter.jsx'
 import { formatCents } from '../components/HideableBalance.jsx'
 import BalanceHeader from '../components/BalanceHeader.jsx'
+import DirectionIcon from '../components/DirectionIcon.jsx'
 
 export default function Expenses() {
   const [period, setPeriod] = useState('month')
@@ -32,7 +33,13 @@ export default function Expenses() {
             <div className="list">
               {recent.map((t) => (
                 <div className="list-item" key={t.id}>
-                  <span>{t.receiverName} - {new Date(t.createdAt).toLocaleDateString('pt-BR')}</span>
+                  <span className="list-item-main">
+                    <DirectionIcon outgoing />
+                    <span className="list-item-text">
+                      {t.receiverName}
+                      <small>{new Date(t.createdAt).toLocaleDateString('pt-BR')}</small>
+                    </span>
+                  </span>
                   <span className="amount-negative">-{formatCents(t.amountCents)}</span>
                 </div>
               ))}

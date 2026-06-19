@@ -93,7 +93,7 @@ export default function Invest() {
               className={investment.type === 'FIXED' ? 'btn' : 'btn-secondary'}
               onClick={() => handleTypeChange('FIXED')}
             >
-              Renda Fixa - 10% por ano
+              Renda Fixa - 10,5% por ano
             </button>
             <button
               type="button"
@@ -120,7 +120,7 @@ export default function Invest() {
             />
           </label>
           <div style={{ display: 'flex', gap: '0.75rem' }}>
-            <button type="submit" className="btn" disabled={submitting || !amount}>
+            <button type="submit" className="btn-success" disabled={submitting || !amount}>
               Confirmar aporte
             </button>
             <button type="button" className="btn-secondary" onClick={handleWithdraw} disabled={submitting || !amount}>

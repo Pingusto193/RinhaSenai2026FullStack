@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { useAuth } from '../context/AuthContext.jsx'
+import BrandMark from '../components/BrandMark.jsx'
 
 export default function Login() {
   const { login } = useAuth()
@@ -26,6 +27,10 @@ export default function Login() {
 
   return (
     <div className="container-narrow card">
+      <div className="auth-brand">
+        <BrandMark size={28} />
+        Flinx
+      </div>
       <h1>Entrar</h1>
       <form className="form" onSubmit={handleSubmit}>
         <label className="field">

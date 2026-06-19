@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router'
 import { getDashboard } from '../api/dashboard.js'
 import HideableBalance, { formatCents } from '../components/HideableBalance.jsx'
+import BrandMark from '../components/BrandMark.jsx'
+import DirectionIcon from '../components/DirectionIcon.jsx'
+
+const PISO_INVESTIDO_CENTS = 1000
 
 const LEDGER_LABEL = {
   transfer_sent: 'Transferencia enviada',
@@ -17,6 +21,7 @@ function isOutgoing(type) {
 export default function Dashboard() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [showAbout, setShowAbout] = useState(false)
 
   useEffect(() => {
     getDashboard().then(setData).catch(() => setData(null)).finally(() => setLoading(false))
@@ -27,7 +32,18 @@ export default function Dashboard() {
 
   return (
     <div>
-      <h1>Dashboard</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+        <h1 style={{ marginBottom: 0 }}>Dashboard</h1>
+        <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
+          <span className="floor-badge">
+            <BrandMark size={16} />
+            Piso investido: {formatCents(PISO_INVESTIDO_CENTS)}
+          </span>
+          <Link to="/amigos" className="floor-badge floor-badge-neutral">
+            Amigos: {Math.max(data.friendsLeaderboard.length - 1, 0)}
+          </Link>
+        </div>
+      </div>
 
       <div className="grid-2">
         <section className="card">
@@ -46,9 +62,12 @@ export default function Dashboard() {
             <div className="list">
               {data.recentLedger.map((entry, i) => (
                 <div className="list-item" key={i}>
-                  <span>
-                    {LEDGER_LABEL[entry.type]}
-                    {entry.counterparty ? ` - ${entry.counterparty}` : ''}
+                  <span className="list-item-main">
+                    <DirectionIcon outgoing={isOutgoing(entry.type)} />
+                    <span className="list-item-text">
+                      {LEDGER_LABEL[entry.type]}
+                      {entry.counterparty ? <small>{entry.counterparty}</small> : null}
+                    </span>
                   </span>
                   <span className={isOutgoing(entry.type) ? 'amount-negative' : 'amount-positive'}>
                     {isOutgoing(entry.type) ? '-' : '+'}{formatCents(entry.amountCents)}
@@ -66,7 +85,9 @@ export default function Dashboard() {
           </div>
 
           <h2 style={{ marginTop: '1.5rem' }}>Tabela de foguinho</h2>
-          <p className="streak-badge">🔥 voce: {data.ownStreak.current} (recorde {data.ownStreak.record})</p>
+          <p className="streak-badge">
+            <BrandMark size={16} /> voce: {data.ownStreak.current} (recorde {data.ownStreak.record})
+          </p>
           <div className="leaderboard-list">
             {data.friendsLeaderboard.map((entry) => (
               <div className="leaderboard-item" key={entry.userId}>
@@ -74,7 +95,7 @@ export default function Dashboard() {
                   <span className="leaderboard-rank">{entry.rank}º</span>
                   {entry.name}
                 </span>
-                <span className="streak-badge">🔥 {entry.current}</span>
+                <span className="streak-badge"><BrandMark size={16} /> {entry.current}</span>
               </div>
             ))}
           </div>
@@ -83,6 +104,17 @@ export default function Dashboard() {
           </Link>
         </section>
       </div>
+
+      <button type="button" className="link-button" onClick={() => setShowAbout((v) => !v)} style={{ marginTop: '1rem' }}>
+        Sobre
+      </button>
+      {showAbout && (
+        <p className="card" style={{ marginTop: '0.75rem', color: 'var(--text-muted)' }}>
+          Flinx e uma carteira digital com investimentos simulados, transferencias entre amigos
+          por codigo pessoal e o foguinho, que mede sua constancia mantendo dinheiro investido
+          acima do piso minimo.
+        </p>
+      )}
     </div>
   )
 }

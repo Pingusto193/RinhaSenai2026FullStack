@@ -1,7 +1,7 @@
 import prisma from '../db.js'
 import { dayKeyOf, monthKeyOf, daysBetween } from './dateKey.js'
 
-const FIXED_ANNUAL_RATE = 0.10
+const FIXED_ANNUAL_RATE = 0.105
 const VARIABLE_MIN_MONTHLY = -0.04
 const VARIABLE_MAX_MONTHLY = 0.06
 
